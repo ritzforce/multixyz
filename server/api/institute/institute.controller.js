@@ -51,17 +51,24 @@ exports.stats = function(req, res) {
 
 exports.allStats = function(req, res) {
   logger.debug('Entering Insitute.controller allStats');
+
   apiUtils.getRecordById(apiUtils.prefixCode(req, TBL_NAME), selectFields, req.params.id,
       function(err, result) {
         if (err) {
           handleError(res, err);
           return;
         }
+        var institute = result;
+        if (Array.isArray(result)) {
+            institute = result[0];
+        }
+
         setup.getStats(institute.code, function(err, result) {
           if (err) {
             handleError(res, err);
             return;
           }
+
           return res.json(200, parseStatResult(result));
 
         });
@@ -227,19 +234,22 @@ function createAdminUser(code, user, callback) {
 }
 
 function parseStatResult(result) {
+
+  logger.debug('****parseStatResult', result);
+
   var finalResult = { summary:[], user5:[], exam5: [] };
   for(var i = 0; i < result.length; i++) {
     if(result[i].Summary == 'Summary') {
       finalResult.summary.push({ field: result[i].Exam, count: result[i].Count});
     }
     if(result[i].Summary == 'User') {
-      finalResult.user5.push({ user: result[i].User, count: result[i].Count});
+      finalResult.user5.push({ user: result[i].Exam, count: result[i].Count});
     }
     if(result[i].Summary == 'Exam') {
       finalResult.exam5.push({ exam: result[i].Exam, count: result[i].Count});
     }
   }
-  return finalResult;
+  return [finalResult];
 
 }
 

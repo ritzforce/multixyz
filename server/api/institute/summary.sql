@@ -10,7 +10,7 @@ WHERE user.active = true  AND status = 'complete'
 Group by paper.userId
 Limit 5
 UNION
-select 'Exam',exam.name, count(*) AS COUNT
+select 'Exam',exam.name, count(*) AS Count
 FROM `{$name}_paper` AS paper inner join `{$name}_exam` as exam ON paper.examId = exam.id 
 WHERE exam.active = true  AND status = 'complete' 
 Group by paper.examId

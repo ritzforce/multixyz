@@ -8,8 +8,9 @@ var router = express.Router();
 
 router.get('/', auth.hasRole('superadmin'), controller.index);
 router.get('/:id',auth.hasRole('superadmin'), controller.show);
+
+router.get('/stats/:id', auth.hasRole('admin'), controller.stats);
 router.get('/allStats/:id', auth.hasRole('superadmin'), controller.allStats);
-router.get('/stats', auth.hasRole('admin'), controller.stats);
 
 router.post('/activate/:id', auth.hasRole('superadmin'),controller.activate);
 router.post('/reactivate/:id',  auth.hasRole('superadmin'),controller.reactivate);

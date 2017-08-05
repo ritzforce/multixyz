@@ -32,7 +32,7 @@ exports.indexFetchInstitutes = function (req, res) {
 exports.indexNotAssignedInstitutes = function(req, res){
   logger.debug('Entering shareExam.controller.indexNotAssignedInstitutes with ExamID = ' + req.params.examId);
   var query = 'SELECT institute.id, institute.name, institute.code, institute.active, institute.description ';
-  query += ' FROM ' + apiUtils.prefixCode(req, 'institute')  + ' WHERE Id NOT IN ';
+  query += ' FROM ' + apiUtils.prefixCode(req, 'institute')  + ' WHERE IsTableCreated = false AND Id NOT IN ';
   query += ' (SELECT instituteId FROM ' + apiUtils.prefixCode(req,'shareexam') + ' WHERE examId = ' + sqlHelper.escape(req.params.examId)  + ')';
 
   apiUtils.select(req, res, query, function (result) {
@@ -73,6 +73,74 @@ exports.indexNotAssignedExams = function (req, res) {
   logger.debug('Exit shareExam.controller.indexNotAssignedExams ');
 }
 
+function copyExams(institute, examIdArray, callback) {
+  var query = "INSERT INTO ";
+  query +=   institute.code + "_exam (id, active, name, code, description, category, maxMarks,";
+  query +=   "passPercent, createdDate, lastModifiedDate)";  
+  query +=  " SELECT id , active, name, code, description, category, maxMarks,passPercent,createdDate, lastModifiedDate ";
+  query +=  " FROM admin_exam WHERE id IN (" + examIdArray.join() + ")";
+  
+  apiUtils.action(query, {}, function(err, result) {
+    callback(err, institute, result);
+  });
+}
+
+function copyQuestions(institute, examIdArray, callback) {
+  var query = " INSERT INTO "; 
+  query +=  institute.code + "_question (`id`, `name`, `questionText`, `a`, `active`, `b`, `c`, `d`, `e`, `f`, `aCorrect`,";
+  query +=  "`bCorrect`, `cCorrect`, `dCorrect`, `eCorrect`, `fCorrect`, `examId`)" ;
+  query +=  "SELECT `id`, `name`, `questionText`, `a`, `active`, `b`, `c`, `d`, `e`, `f`, `aCorrect`,"
+  query +=  "`bCorrect`, `cCorrect`, `dCorrect`, `eCorrect`, `fCorrect`, `examId`" 
+  query +=  " FROM admin_question WHERE examId IN (" + examIdArray.join() + ")" ;
+   
+  apiUtils.action(query, {}, function(err, result) {
+    callback(err, result);
+  });
+}
+
+
+
+function handleLiveCopy(req, res, instituteIdArray, examIdArray) {
+   logger.debug('Entering shareExam.handleLiveCopy with instituteId Array & examId Array', instituteIdArray, examIdArray);
+    
+    var query = 'SELECT id, code from admin_institute Where isTableCreated = true ';
+    query += ' AND id IN (' + instituteIdArray.join() +  ')';
+
+    var copyExamQuery = '';
+
+    apiUtils.select(req, res, query, function (result) {
+      logger.debug('Results for Live Institutes query', result);
+      var masterCount = result.length;
+      var count = 0;
+      logger.debug('**master Count**' + masterCount);
+
+      for (var i = 0; i < result.length; i++) {
+          copyExams(result[i], examIdArray, function(err, institute, result) {
+            if(err) {
+              apiUtils.handleError(res, err);
+              return;
+            }
+            copyQuestions(institute, examIdArray, function(err, result){
+              if (err) {
+                apiUtils.handleError(res, err);
+                return;
+              }
+              count++;
+              logger.debug('***counter***' + count);
+              if (count >= masterCount) {
+                res.send({"ok":"done"});
+              }
+
+            });
+          });
+      }   
+
+    });
+   logger.debug('Exit shareExam.handleLiveCopy with instituteId Array and examId Array', instituteIdArray, examIdArray);
+}
+
+
+
 exports.shareExamAssignments = function (req, res) {
   logger.debug('Entering shareExam.controller.shareExamAssignments with request body = ', req.body);
 
@@ -103,7 +171,8 @@ exports.shareExamAssignments = function (req, res) {
           failureCount++;
         }
         if(successCount + failureCount === maxLength){
-          res.send({success: successCount, failureCount : failureCount});
+          //res.send({success: successCount, failureCount : failureCount});
+          handleLiveCopy(req, res, instituteIdArray, examIdArray);
         }
       });
     }
