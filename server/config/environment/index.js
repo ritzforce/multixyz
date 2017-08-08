@@ -34,10 +34,10 @@ var all = {
 
   sql: {
     maxLimit: 100,
-    host: '127.0.0.1',
+    host: 'localhost',
     user : 'root',
-    password: '',
-    database: 'examination'
+    password: 'root',
+    database: 'Insti'
   },
   
   log: {
