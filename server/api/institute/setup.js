@@ -83,7 +83,7 @@ function getScriptSqlFile() {
 }
 
 function getSummaryFile() {
-	return path.normalize(__dirname + '/summary.sql');
+	return path.normalize(__dirname + '/summary1.sql');
 }
 
 
