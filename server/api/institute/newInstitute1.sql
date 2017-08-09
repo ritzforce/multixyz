@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `{$name}_paperAnswer` (
   `answer` varchar(10) DEFAULT NULL,
   `correct` tinyint(1) DEFAULT NULL,
   `createdDate` datetime ,
-  `lastModifiedDate` datetime DEFAULT CURRENT_TIMESTAMP,
+  `lastModifiedDate` timestamp DEFAULT CURRENT_TIMESTAMP,
   `id` int(30) NOT NULL AUTO_INCREMENT,
   `questionId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
