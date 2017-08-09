@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `{$name}_user` (
   `salt` varchar(1024) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `password` varchar(1024) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `createdDate` datetime,
-  `lastModifiedDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   KEY `name` (`name`,`email`),
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `{$name}_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(80) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `createdDate` datetime,
-  `lastModifiedDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `{$name}_paper` (
   `result` tinyint(1) DEFAULT NULL,
   `percent` int(11) DEFAULT NULL,
   `createdDate` datetime ,
-  `lastModifiedDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastModifiedDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` varchar(255) DEFAULT NULL,
   `timeTaken` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
