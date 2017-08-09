@@ -79,11 +79,11 @@ exports.createTables = function(institute, callback) {
 
 
 function getScriptSqlFile() {
-	return path.normalize(__dirname + '/newInstitute.sql');
+	return path.normalize(__dirname + '/newInstitute1.sql');
 }
 
 function getSummaryFile() {
-	return path.normalize(__dirname + '/summary1.sql');
+	return path.normalize(__dirname + '/summary.sql');
 }
 
 
