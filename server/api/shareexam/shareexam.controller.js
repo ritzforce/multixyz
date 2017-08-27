@@ -100,7 +100,7 @@ function copyQuestions(institute, examIdArray, callback) {
 
 
 
-function handleLiveCopy(req, res, instituteIdArray, examIdArray) {
+function handleLiveCopy(req, res, instituteIdArray, examIdArray, successCount, failureCount) {
    logger.debug('Entering shareExam.handleLiveCopy with instituteId Array & examId Array', instituteIdArray, examIdArray);
     
     var query = 'SELECT id, code from admin_institute Where isTableCreated = true ';
@@ -113,6 +113,12 @@ function handleLiveCopy(req, res, instituteIdArray, examIdArray) {
       var masterCount = result.length;
       var count = 0;
       logger.debug('**master Count**' + masterCount);
+
+      // The institute is not live yet
+      if (result.length == 0) {
+         res.send({success: successCount, failureCount : failureCount});
+         return;
+      }
 
       for (var i = 0; i < result.length; i++) {
           copyExams(result[i], examIdArray, function(err, institute, result) {
@@ -172,7 +178,7 @@ exports.shareExamAssignments = function (req, res) {
         }
         if(successCount + failureCount === maxLength){
           //res.send({success: successCount, failureCount : failureCount});
-          handleLiveCopy(req, res, instituteIdArray, examIdArray);
+          handleLiveCopy(req, res, instituteIdArray, examIdArray, successCount, failureCount);
         }
       });
     }

@@ -1,5 +1,6 @@
 'use strict';
 
+var fs = require("fs");
 var _ = require('lodash');
 var sqlHelper = require('./../../config/sqlHelper');
 var SqlUtils = require('./../sqlUtils');
@@ -8,7 +9,8 @@ var setup = require('./setup.js');
 var logger = require('./../../logger/logger');
 var userController = require('./../user/user.controller');
 
-var selectFields = ['id','isTableCreated', 'name','code','description', 'active','createdDate', 'lastModifiedDate'];
+
+var selectFields = ['id','isTableCreated', 'name','code','description','phone','email','address','active','createdDate', 'lastModifiedDate'];
 
 var TBL_NAME = 'institute';
 
@@ -19,12 +21,55 @@ exports.index = function(req, res) {
   logger.debug('Exit fetch All Institutes');
 };
 
+exports.getCurrentInstitute = function(req, res) {
+  logger.debug("********Entering fetch Current Institute*******");
+  var query = "SELECT name,address, phone, email, logo from admin_institute where code = ";
+
+  if (req.user && req.user.code) {
+    var newQuery = query + sqlHelper.escape(req.user.code);
+
+    apiUtils.select(req, res, newQuery, function(result) {
+       return res.json(200, result);
+    }); 
+  }
+  logger.debug('Existing fetch Current Institute');
+}
+
+exports.getLogo = function(req, res) {
+  logger.debug('Entering Institute After Login');
+  var includeLogo = selectFields;
+  includeLogo.push('logo');
+
+  apiUtils.show(req, res, TBL_NAME, includeLogo, 'name ASC');
+
+  logger.debug('Exiting Institute After Login');
+};
+
 // Get a single institute
 exports.show = function(req, res) {
   logger.debug('Entering get one Single Institute');
   apiUtils.show(req, res, TBL_NAME, selectFields, 'name ASC');
   logger.debug('Exit get one single Institute');
 };
+
+exports.uploadLogo = function(req, res) {
+  logger.debug('Entering Upload Logo function');
+  var body = req.body;
+  var file = req.files.file;
+
+  req.params.id = req.body.instituteid;
+
+  logger.debug('****file.type**' + file.type);
+  
+  fs.readFile(file.path, function(err, data) {
+     var str = new Buffer(data).toString('base64');
+     var finalStr = "data:" + file.type  + ";base64," + str;
+
+     return apiUtils.update(req, res, TBL_NAME, {logo: finalStr}, selectFields);
+  });
+
+
+}
 
 // Creates a new institute in the DB.
 exports.create = function(req, res) {

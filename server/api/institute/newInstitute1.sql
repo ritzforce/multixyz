@@ -133,9 +133,9 @@ INSERT INTO `{$name}_category`  (
    );
 
 
-INSERT INTO `{$name}_exam` (id, active, name, code, description, category, maxMarks,
+INSERT INTO `{$name}_exam` (id, imageId,timeAllowed, active, name, code, description, category, maxMarks,
   passPercent, createdDate, lastModifiedDate)  
-SELECT id , active, name, code, description, category, maxMarks,passPercent,createdDate, lastModifiedDate 
+SELECT id , imageId,timeAllowed, active, name, code, description, category, maxMarks,passPercent,createdDate, lastModifiedDate 
 FROM admin_exam WHERE 
 id NOT IN (select id from `{$name}_exam`) AND
 id IN (SELECT examId FROM admin_shareexam WHERE instituteId = {$instituteId} );

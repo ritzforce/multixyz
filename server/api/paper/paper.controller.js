@@ -106,7 +106,9 @@ function updatePaperResult(req, res, paperId, correctPercent, result) {
 function getExamDetails(req, res, paperResult) {
 	logger.debug('Entering paperController.getExamDetails with paperResult', paperResult);
 
-	var query = 'SELECT maxMarks,passPercent,count(*) As questionCount FROM exam, question' +
+	var query = 'SELECT maxMarks,passPercent,count(*) As questionCount FROM ' + 
+		apiUtils.prefixCode(req,'exam') + ',' +
+		apiUtils.prefixCode(req,'question') +
 		' WHERE question.examId = exam.id ' +
 		' AND exam.id = ' + sqlHelper.escape(paperResult.examId) +
 		' AND question.active = true ' +

@@ -317,9 +317,29 @@ exports.findByEmail = function (email, code, callback) {
 	sqlUtils.appendSelectFields(selectFields);
 	sqlUtils.appendSelectFields(['password', 'salt']);
 	sqlUtils.appendWhereClauses("email = " + sqlHelper.escape(email));
-	sqlUtils.appendWhereClauses("active = 1");
+	//sqlUtils.appendWhereClauses("active = 1");
 
 	apiUtils.fireRawQuery(sqlUtils.getSelectQuery(), callback);
+}
+
+exports.signup = function(req, res, next) {
+	logger.debug('Entering userController.signUpNewUser with body' + req.body);	
+	logger.debug(JSON.stringify(req.body));
+
+	var user = req.body;
+
+	var userTable = user.code.toLowerCase() + "_" + TBL_NAME;
+	checkIfTableExists(req, res, userTable, function(tblResult) {
+		//Invalid code
+		if (tblResult == 0) {
+			res.json(422, 'The Institute Code is invalid');
+			return;	
+		}
+		req.user = { code : req.body.code};
+
+		return createUser(req, res, req.body);
+	});
+
 }
 
 /************************************Utility Functions******************************/
@@ -380,17 +400,26 @@ function createUser(req, res, userBody) {
 		}
 
 		var userTable = user.code.toLowerCase() + "_" + TBL_NAME;
+
+
 		if (user.code) {
 			delete user.code;
 		}	
+			
 		//Creation Complete
 		apiUtils.create(req, res, userTable, user, selectFields, function (user) {
 			logger.info('User created with the following details ', user)
 			logger.debug('Exit create user');
 			res.json({ id: user.id });
 		});
+		
+		
 	})
 
+}
+
+function checkIfTableExists(req, res, tbl, callback) {
+	apiUtils.select(req, res, "SHOW TABLES LIKE " + sqlHelper.escape(tbl), callback);
 }
 
 /**

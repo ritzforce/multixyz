@@ -35,7 +35,7 @@ exports.upsert = function (req, res) {
 
 	var requestBody = req.body;
 
-	var sqlUtils = new SqlUtils(TBL_NAME, 1000);
+	var sqlUtils = new SqlUtils(apiUtils.prefixCode(req,TBL_NAME), 1000);
 	sqlUtils.appendSelectFields('id');
 	sqlUtils.appendWhereClauses('paperId = ' + sqlHelper.escape(requestBody.paperId));
 	sqlUtils.appendWhereClauses('questionId = ' + sqlHelper.escape(requestBody.questionId));
