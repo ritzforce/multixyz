@@ -75,9 +75,9 @@ exports.indexNotAssignedExams = function (req, res) {
 
 function copyExams(institute, examIdArray, callback) {
   var query = "INSERT INTO ";
-  query +=   institute.code + "_exam (id, active, name, code, description, category, maxMarks,";
+  query +=   institute.code + "_exam (id, imageId,timeAllowed, active, name, code, description, category, maxMarks,";
   query +=   "passPercent, createdDate, lastModifiedDate)";  
-  query +=  " SELECT id , active, name, code, description, category, maxMarks,passPercent,createdDate, lastModifiedDate ";
+  query +=  " SELECT id ,imageId,timeAllowed,active, name, code, description, category, maxMarks,passPercent,createdDate, lastModifiedDate ";
   query +=  " FROM admin_exam WHERE id IN (" + examIdArray.join() + ")";
   
   apiUtils.action(query, {}, function(err, result) {

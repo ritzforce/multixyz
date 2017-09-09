@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `{$name}_paperAnswer` (
 ) ENGINE=InnoDB AUTO_INCREMENT=70966 DEFAULT CHARSET=latin1;
 
 
-CREATE TABLE IF NOT EXISTS `{$name}_userexam` (
+CREATE TABLE IF NOT EXISTS `{$name}_userExam` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `examId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,

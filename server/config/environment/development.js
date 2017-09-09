@@ -10,10 +10,10 @@ module.exports = {
 
   sql: {
     maxLimit: 100,
-    host: 'localhost',
-    user : 'root',
-    password: 'root',
-    database: 'Insti'
+    host: 'sql12.freemysqlhosting.net',
+    user : 'sql12191887',
+    password: 'gyEXd3imH1',
+    database: 'sql12191887'
   },
 
   log: {
