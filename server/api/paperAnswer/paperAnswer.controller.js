@@ -9,7 +9,7 @@ var logger = require('./../../logger/logger');
 /***********************************************/
 
 var selectFields = ['id', 'paperId', 'questionId', 'correct', 'answer', 'createdDate', 'lastModifiedDate'];
-var TBL_NAME = 'paperanswer';
+var TBL_NAME = 'paperAnswer';
 
 exports.index = function (req, res) {
 	logger.debug('Entering paperAnswer.index with exam Id', req.params.examId);
@@ -52,7 +52,7 @@ function queryQuestion(req, res, result, requestBody){
 
 	var selectQuery = 	"select CONCAT(IF(aCorrect,'a',''), IF(bCorrect,'b',''), IF(cCorrect,'c',''), " +
 						"IF(dCorrect,'d',''), IF(eCorrect,'e',''), " +
-     					"IF(fCorrect,'f','')) AS answer FROM " + apiUtils.prefixCode(req,'Question');
+     					"IF(fCorrect,'f','')) AS answer FROM " + apiUtils.prefixCode(req,'question');
      selectQuery   +=   " WHERE id = " + sqlHelper.escape(requestBody.questionId); 
 
 	
