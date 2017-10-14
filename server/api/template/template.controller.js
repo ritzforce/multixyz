@@ -58,7 +58,7 @@ exports.upload = function(req, res){
 
 exports.lastBackup = function(req, res){
 	logger.debug('Entering template.lastBackup');
-	apiUtils.select(req, res, 'SELECT DATEDIFF(CURDATE(),DATE) AS date FROM ' + apiUtils.prefixCode(req, 'Backup') + ' ORDER BY DATE ASC LIMIT 1', function(result){
+	apiUtils.select(req, res, 'SELECT DATEDIFF(CURDATE(),DATE) AS date FROM ' + apiUtils.prefixCode(req, 'backup') + ' ORDER BY DATE ASC LIMIT 1', function(result){
 		if(result.length === 0){
 			return res.json({'days': -1});
 		}
