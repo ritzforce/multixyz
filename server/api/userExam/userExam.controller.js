@@ -9,7 +9,7 @@ var logger = require('./../../logger/logger');
 
 var selectFields = ['id', 'userId', 'examId'];
 
-var TBL_NAME = 'userexam';
+var TBL_NAME = 'userExam';
 
 /*
 // Get list of user Exams
@@ -38,7 +38,7 @@ exports.indexByExamNew = function(req, res){
 	logger.debug('Entering userExam.controller.indexByExamNew with ExamID = ' + req.params.examId);
 	var query = 'SELECT user.id, user.email, user.name, user.active FROM ' + apiUtils.prefixCode(req, 'user');
 	query += ' WHERE Id NOT IN '
-	query += ' (SELECT userId FROM ' + apiUtils.prefixCode(req,'userexam')  + ' WHERE ExamId = ' + sqlHelper.escape(req.params.examId)  + ')';
+	query += ' (SELECT userId FROM ' + apiUtils.prefixCode(req,'userExam')  + ' WHERE ExamId = ' + sqlHelper.escape(req.params.examId)  + ')';
 	query += ' AND role = \'user\' ';
 
 	apiUtils.select(req, res, query, function (result) {
@@ -68,7 +68,7 @@ exports.indexByUserNew = function (req, res) {
 	logger.debug('Entering userExam.controller.indexByUserNew with userId' + req.params.userId);
 	var query = 'SELECT id, name, code, category, active FROM ' +  apiUtils.prefixCode(req, 'exam') ; 
 	query += ' WHERE id NOT IN '
-	query += ' (SELECT ExamId FROM ' + apiUtils.prefixCode(req, 'UserExam') + ' WHERE userId = ' + sqlHelper.escape(req.params.userId) + ')';
+	query += ' (SELECT ExamId FROM ' + apiUtils.prefixCode(req, 'userExam') + ' WHERE userId = ' + sqlHelper.escape(req.params.userId) + ')';
 	
 	apiUtils.select(req, res, query, function (result) {
 		logger.debug('Results for indexByUserNew query', result);

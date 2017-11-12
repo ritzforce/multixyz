@@ -74,6 +74,10 @@ exports.uploadLogo = function(req, res) {
 // Creates a new institute in the DB.
 exports.create = function(req, res) {
   logger.debug('Entering create a new institute');
+  if(req.body.code) {
+    req.body.code = req.body.code.toLowerCase();
+  }
+
   apiUtils.create(req, res, TBL_NAME, req.body, selectFields);
   logger.debug('Exit create a new institute');
 };
