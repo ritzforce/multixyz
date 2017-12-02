@@ -29,6 +29,7 @@ module.exports = {
   firebase: {
     type:  process.env.FIREBASE_TYPE,
     storage_bucket: process.env.FIREBASE_STORAGE_BUCKET,
+    client_email: process.env.FIREBASE_CLIENT_EMAIL,
     project_id: process.env.FIREBASE_PROJECT_ID,
     private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
     private_key: process.env.FIREBASE_PRIVATE_KEY,
