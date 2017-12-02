@@ -8,6 +8,7 @@ var apiUtils = require('./../apiUtils');
 var setup = require('./setup.js');
 var logger = require('./../../logger/logger');
 var userController = require('./../user/user.controller');
+var firebase = require('./../../config/firebase');
 
 
 var selectFields = ['id','isTableCreated', 'name','code','description','phone','email','address','active','createdDate', 'lastModifiedDate'];
@@ -60,15 +61,22 @@ exports.uploadLogo = function(req, res) {
   req.params.id = req.body.instituteid;
 
   logger.debug('****file.type**' + file.type);
-  
+  logger.debug('***file****' + file.path);
+
   fs.readFile(file.path, function(err, data) {
-     var str = new Buffer(data).toString('base64');
-     var finalStr = "data:" + file.type  + ";base64," + str;
-
-     return apiUtils.update(req, res, TBL_NAME, {logo: finalStr}, selectFields);
+     //var str = new Buffer(data).toString('base64');
+      var finalStr = 'test'; // "data:" + file.type  + ";base64," + str;
+      firebase.uploadLogo(file.path, function(err, response){
+        if (err) {
+            console.log('***ERROR****')
+            console.log(err);
+            handleError(res, err);
+        }
+        console.log(response);
+        finalStr = response.mediaLink;
+        return apiUtils.update(req, res, TBL_NAME, {logo: finalStr}, selectFields);
+      });  
   });
-
-
 }
 
 // Creates a new institute in the DB.

@@ -185,6 +185,16 @@ function retrieveUserProfileById(req, res) {
 
 exports.profile = retrieveUserProfileById;
 
+exports.getAdminUser = function(req, res) {
+	logger.debug('Entering user.controller.getAdminUser with params' , req.params);
+	var instituteCode = req.params.instituteCode;
+
+	apiUtils.index(req, res, instituteCode.toLowerCase() + "_" + TBL_NAME, 
+	selectFields, "name ASC", "role = 'admin'");
+
+	logger.debug('Exiting user.controller.getAdminUser');
+}
+
 exports.resetPassordSelf = function(req, res){
 	logger.debug('Entering user.controller.resetPassordSelf with body');
 

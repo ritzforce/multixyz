@@ -24,7 +24,7 @@ exports.index = function (req, res) {
 
 		var whereClause = [];
 		whereClause.push('active = true');
-		whereClause.push(' id IN ( SELECT examId from ' + apiUtils.prefixCode(req, 'userexam') +  ' where userId = ' + sqlHelper.escape(req.user.id) + ' )');
+		whereClause.push(' id IN ( SELECT examId from ' + apiUtils.prefixCode(req, 'userExam') +  ' where userId = ' + sqlHelper.escape(req.user.id) + ' )');
 
 		apiUtils.index(req, res, 'exam', selectFields, 'name ASC', whereClause);
 	}
