@@ -17,7 +17,7 @@ function upload(filePath, directory, isPublic, callback){
     var bucket = admin.storage().bucket();
     var fileName = path.basename(filePath);
     var uploadTo = path.join(directory, fileName);
-    var fileMime = mime.lookup(filePath);
+    //var fileMime = mime.lookup(filePath);
 
     var options = {
         public: isPublic,
