@@ -30,7 +30,7 @@ exports.launch = function(req,res){
 	whereClause.push('active = true ');
 
 	if(!auth.isAdminRole(req)){
-		whereClause.push(' examId IN (SELECT examId FROM ' + apiUtils.prefixCode(req, 'userexam')  + ' WHERE userId =' + sqlHelper.escape(req.user.id) + 
+		whereClause.push(' examId IN (SELECT examId FROM ' + apiUtils.prefixCode(req, 'userExam')  + ' WHERE userId =' + sqlHelper.escape(req.user.id) + 
 		                 ' AND examId =' + examId + ')');
 	}
 
