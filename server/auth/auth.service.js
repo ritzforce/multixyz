@@ -89,9 +89,16 @@ function hasRole(roleRequired) {
 /**
  * Returns a jwt token signed by the app secret
  */
-function signToken(id, code) {
+function signToken(id, code, mobile) {
 	logger.info('Sign Token =>' + id + ", Sign Code=>" + code);
-	return jwt.sign({ id: id, code: code}, config.secrets.session, { expiresInMinutes: 60 * 5 });
+	var timeoutInMinutes = 60 * 5;
+	if(mobile) {
+		timeoutInMinutes = 60 * 24 * 10;
+	}
+	logger.info("timeoutInMinutes ", timeoutInMinutes);
+
+	return jwt.sign({ id: id, code: code}, config.secrets.session, 
+		{ expiresInMinutes: timeoutInMinutes });
 }
 
 /**

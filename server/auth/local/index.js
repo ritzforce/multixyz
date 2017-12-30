@@ -19,7 +19,7 @@ router.post('/', function (req, res, next) {
 		logger.info('***authentication successful*****');
 		logger.info(user);
 		
-		var token = auth.signToken(user.id, req.body.code);
+		var token = auth.signToken(user.id, req.body.code, req.body.mobile);
 		
 		res.json({ token: token });
 

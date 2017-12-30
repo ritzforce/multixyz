@@ -38,6 +38,24 @@ exports.launch = function(req,res){
 }
 
 
+exports.mobilelaunch = function(req,res){
+	var examId = sqlHelper.escape(req.params.examId);
+	var selectFields = ['id','name','questionText','a','b','c','d','e','f',
+		'aCorrect','bCorrect','cCorrect','dCorrect','eCorrect','fCorrect',
+		'aCorrect + bCorrect + cCorrect + dCorrect + eCorrect + fCorrect As len'];
+
+	var whereClause = [];
+	whereClause.push('examId = ' + examId);
+	whereClause.push('active = true ');
+
+	if(!auth.isAdminRole(req)){
+		whereClause.push(' examId IN (SELECT examId FROM userexam WHERE userId =' + sqlHelper.escape(req.user.id) +
+			' AND examId =' + examId + ')');
+	}
+
+	apiUtils.index(req, res, TBL_NAME, selectFields,null,whereClause);
+}
+
 /***********************************************/
 /* Get One Single Question, based on Id field
 /***********************************************/
